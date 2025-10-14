@@ -21,20 +21,18 @@ public class GameLogic {
     public static int moveTileUpAsFarAsPossible(int[][] board, int r, int c, int minR) {
         int result = 0;//avoid double merging
         for(int i = r - 1;i >= 0;i--){
-            if(board[i][c] != 0 ){       //for merging the tile
-                if(board[i][c] == board[i + 1][c] && i >= minR && result == 0){
-                    board[i][c] *= 2;
-                    board[i + 1][c] = 0;
-                    result = i + 1;
-                }
-            }
-            if(board[i][c] == 0 && i >= minR){       //for moving up the tile
+            if(board[i][c] == 0 && i >= minR){       //for moving up the tile,but only consider about one single tile
                 board[i][c] = board[i + 1][c];
                 board[i + 1][c] = 0;
             }
+            if(board[i][c] == board[i + 1][c] && i >= minR){ // for merging the tiles,but only consider about one single tile
+                board[i][c] *= 2;
+                board[i + 1][c] = 0;
+                result = i + 1;
+                break;
+            }
         }
         return result;
-
     }
 
     /**
@@ -47,12 +45,8 @@ public class GameLogic {
     public static void tiltColumn(int[][] board, int c) {
         int result = 0;
         for(int i = 0; i < board.length; i++){
-            if(result == 0){
-                result = moveTileUpAsFarAsPossible(board, i, c, 0);
-            }else{
-                moveTileUpAsFarAsPossible(board, i, c, result);
-            }
-            //result = moveTileUpAsFarAsPossible(board, i, c, result);
+            if(board[i][c] == 0) continue;     //doesn't make any sense to work with a tile which is 0
+            result = moveTileUpAsFarAsPossible(board, i, c, result);
         }
     }
 
