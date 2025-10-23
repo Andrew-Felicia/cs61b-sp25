@@ -137,4 +137,68 @@ public class LinkedListDeque61BTest {
         assertThat(lld1.removeFirst() == 3);
         assertThat(lld1.size() == 0);
     }
+
+
+    //enhancements
+    //##########################################################################################################
+    @Test
+    public void addLastTestBasicWithoutToList() {
+        Deque61B<String> lld1 = new LinkedListDeque61B<>();
+
+        lld1.addLast("front"); // after this call we expect: ["front"]
+        lld1.addLast("middle"); // after this call we expect: ["front", "middle"]
+        lld1.addLast("back"); // after this call we expect: ["front", "middle", "back"]
+
+        for (String s : lld1) {
+            System.out.println(s);
+        }
+        //One shortcoming of our Deque61B interface is that it can not be iterated over.
+        // That is, the code below fails to compile with the error “foreach not applicable to type”.
+
+        //assertThat(lld1).containsExactly("front", "middle", "back");
+        //Similarly, if we try to write a test that our Deque61B contains a specific set of items,
+        // we’ll also get a compile error, in this case: “Cannot resolve method containsExactly in Subject”.
+        //The Truth library works by iterating over our object (as in the first example), but our
+        // LinkedListDeque61B does not support iteration.
+
+    }
+
+    @Test
+    public void testEqualDeques61B() {
+        Deque61B<String> lld1 = new LinkedListDeque61B<>();
+        Deque61B<String> lld2 = new LinkedListDeque61B<>();
+
+        lld1.addLast("front");
+        lld1.addLast("middle");
+        lld1.addLast("back");
+
+        lld2.addLast("front");
+        lld2.addLast("middle");
+        lld2.addLast("back");
+
+        assertThat(lld1).isEqualTo(lld2);
+        //it will fail because the equals method simply checks to see if the addresses
+        // of the two objects are the same.
+        //the default equal method is like this below:
+        //    public boolean equals(Object obj) {
+        //        return (this == obj);
+        //    }
+        //so we need to override equal method to be able to check whether the two
+        // Deque61B objects are equal in terms of elements and order
+    }
+
+    @Test
+    public void toStringTest() {
+        Deque61B<String> lld1 = new LinkedListDeque61B<>();
+
+        lld1.addLast("front");
+        lld1.addLast("middle");
+        lld1.addLast("back");
+
+        System.out.println(lld1);
+        //it will not fail.
+        //if you don't override the toString method, it will use the default toString,
+        //and you will will get this:LinkedListDeque61B@55182842
+    }
+
 }

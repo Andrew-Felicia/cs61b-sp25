@@ -1,3 +1,4 @@
+import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList; // import the ArrayList class
 
@@ -26,6 +27,51 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
     }
 
 
+    /** returns an iterator (a.k.a. seer) into ME */
+    public Iterator<T> iterator() {
+        return new Deque61BIterator();
+    }
+    private class Deque61BIterator implements Iterator<T> {
+        private Node current;
+
+        public Deque61BIterator() {
+            current = sentinel.next; // start at first element
+        }
+
+        public boolean hasNext() {
+            return current != sentinel; // stop when back at sentinel
+        }
+
+        public T next() {
+            T item = current.item;
+            current = current.next; // move forward
+            return item;
+        }
+    }
+
+    //Note: The instanceof operator behaves a little strangely with generic types,
+    // for reasons beyond the scope of this course. For example, if you want to check if
+    // lst is an instance of a List<Integer>, you should use lst instanceof List<?> rather
+    // than lst instanceof List<Integer>. Unfortunately, this is not able to check the types of
+    // the elements, but it’s the best we can do.
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(!(o instanceof LinkedListDeque61B<?> other)) return false;
+        if(this.size != other.size) return false;
+
+        for (int i = 0; i < size(); i++) {
+            T a = this.get(i);
+            Object b = other.get(i);
+            if(a != b) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return this.toList().toString();
+    }
 
     @Override
     public void addFirst(T x) {
