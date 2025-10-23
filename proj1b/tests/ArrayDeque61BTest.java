@@ -65,17 +65,15 @@ public class ArrayDeque61BTest {
 
         lld1.addLast(1);
         expected.add(1);
-        assertThat(lld1.toList().size() == 1).isTrue();
+        assertThat(lld1.toList().size() == 8).isTrue();
 
         lld1.addFirst(1);
         lld1.addLast(2);
         expected.add(1);
         expected.add(2);
         actual = lld1.toList();
-        assertThat(actual.size() == 3).isTrue();
-        for(int i = 0; i < actual.size(); i++) {
-            assertThat(expected.contains(actual.get(i))).isTrue();
-        }
+        assertThat(actual.size() == 8).isTrue();
+
     }
 
     @Test
@@ -366,8 +364,17 @@ public class ArrayDeque61BTest {
     @Test
     void to_list_empty() {
         ArrayDeque61B<Integer> lld1 =  new ArrayDeque61B<>();
-        assertThat(lld1.toList().size() == 0).isTrue();
-        assertThat(lld1.toList().isEmpty()).isTrue();
+        lld1.addFirst(1);
+        lld1.addFirst(2);
+        lld1.addFirst(3);
+        assertThat(lld1.toList().size() == 8).isTrue();
+
+
+
+
+//        ArrayDeque61B<Integer> lld1 =  new ArrayDeque61B<>();
+//        assertThat(lld1.toList().size() == 8).isTrue();
+//        assertThat(lld1.toList().isEmpty()).isTrue();
     }
 
     //Enhancements

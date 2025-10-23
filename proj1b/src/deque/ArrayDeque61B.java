@@ -46,6 +46,7 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
     // lst is an instance of a List<Integer>, you should use lst instanceof List<?> rather
     // than lst instanceof List<Integer>. Unfortunately, this is not able to check the types of
     // the elements, but it’s the best we can do.
+    //question: when we use for i : something, where does the iterator starts to iterate?
 
     @Override
     public boolean equals(Object o) {
@@ -88,7 +89,7 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
     }
 
     //resizing up or down the items
-    private void resize(int capacity) {
+    public void resize(int capacity) {
         T[] newitems = (T[]) new Object[capacity];            //create new items
 
         for(int i = 0; i < this.size; i++){                   //copy the elements from old items to new items
@@ -105,10 +106,13 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
     @Override
     public List<T> toList() {
         List<T> returnList = new ArrayList<>(); //This is one location where you are allowed to use a Java data structure.
-        for(int i = 0; i < items.length; i++){
-            if(items[i] != null){
+//        for(int i = 0; i < items.length; i++){
+//            if(items[i] != null){
+//                returnList.add(items[i]);
+//            }
+//        }
+        for(int i = 0; i < this.items.length; i++){
                 returnList.add(items[i]);
-            }
         }
         return returnList;
     }
@@ -157,7 +161,7 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
         if(index < 0 || index >= items.length){
             return null;
         }
-        return items[index];
+        return this.items[index];
 
     }
 
