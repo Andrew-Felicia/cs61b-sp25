@@ -119,8 +119,9 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
 
     @Override
     public boolean isEmpty() {
-        if(size == 0) return true;
-        return false;
+//        if(size == 0) return true;
+//        return false;
+        return size == 0;
     }
 
     @Override
@@ -130,7 +131,7 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
 
     @Override
     public T removeFirst() {
-        if(this.size <= items.length * 0.25){
+        if(items.length >= 16 && this.size <= items.length * 0.25){
             resize(items.length / 2);
         }
         T result;
@@ -144,7 +145,7 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
 
     @Override
     public T removeLast() {
-        if(this.size <= items.length * 0.25){
+        if(items.length >= 16 && this.size <= items.length * 0.25){
             resize(items.length / 2);
         }
         T result;
