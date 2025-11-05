@@ -5,7 +5,7 @@ import java.util.Set;
  * declaration, though you can and should use other type parameters when
  * necessary.
  */
-public interface Map61B<K, V> extends Iterable<K> {
+public interface Map61B<K , V> extends Iterable<K> {
 
     /** Associates the specified value with the specified key in this map.
      *  If the map already contains the specified key, replaces the key's mapping
