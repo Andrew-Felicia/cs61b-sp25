@@ -1,7 +1,7 @@
 package ngrams;
 
-import java.util.List;
-import java.util.TreeMap;
+import java.sql.Time;
+import java.util.*;
 
 /**
  * An object for mapping a year number (e.g. 1996) to numerical data. Provides
@@ -30,15 +30,33 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      */
     public TimeSeries(TimeSeries ts, int startYear, int endYear) {
         super();
-        // TODO: Fill in this constructor.
+        for(Integer year : ts.keySet()) {
+            if(year >= startYear && year <= endYear){
+                this.put(year, ts.get(year));
+            }
+        }
     }
 
     /**
      *  Returns all years for this time series in ascending order.
      */
     public List<Integer> years() {
-        // TODO: Fill in this method.
-        return null;
+//        List<Integer> result = new ArrayList<>();
+//        Set<Integer> tmp = this.descendingKeySet();
+//        for(Integer year : tmp) {
+//            result.addFirst(year);
+//        }
+//        return result;
+        return new ArrayList<>(this.keySet());
+        /*
+        ArrayList doesn’t have addFirst() — that’s a method from LinkedList.
+        → This will not even compile.
+
+       You are using descendingKeySet(), which gives keys in descending order,
+       but you’re trying to re-reverse it manually with addFirst().
+       → Overcomplicates it.
+       TreeMap already keeps keys in ascending order,
+        */
     }
 
     /**
@@ -46,8 +64,17 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      *  order of years().
      */
     public List<Double> data() {
-        // TODO: Fill in this method.
-        return null;
+//        List<Integer> resultK = this.years();
+//        List<Double> resultV = new ArrayList<>();
+//        for(Integer year : resultK) {
+//            resultV.addLast(this.get(year));
+//        }
+//        return resultV;
+        List<Double> result = new ArrayList<>();
+        for (Integer year : this.keySet()) {
+            result.add(this.get(year));
+        }
+        return result;
     }
 
     /**
@@ -60,8 +87,16 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      * should store the value from the TimeSeries that contains that year.
      */
     public TimeSeries plus(TimeSeries ts) {
-        // TODO: Fill in this method.
-        return null;
+        TimeSeries result = ts;
+        for(Map.Entry<Integer, Double> entry : this.entrySet()) {
+            if(result.containsKey(entry.getKey())) {
+                result.put(entry.getKey(), result.get(entry.getKey()) + entry.getValue());
+            }
+            else {
+                result.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return result;
     }
 
     /**
@@ -74,8 +109,17 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      * If TS has a year that is not in this TimeSeries, ignore it.
      */
     public TimeSeries dividedBy(TimeSeries ts) {
-        // TODO: Fill in this method.
-        return null;
+        TimeSeries result = new TimeSeries();
+        for(Map.Entry<Integer, Double> entry : this.entrySet()) {
+            if(!ts.containsKey(entry.getKey())){
+                throw new IllegalArgumentException("S is missing a year that exists in this TimeSeries");
+            }
+            if(ts.get(entry.getKey()) == 0.0){
+                throw new IllegalArgumentException("can't divide by zero!");
+            }
+            result.put(entry.getKey(), entry.getValue() / ts.get(entry.getKey()));
+        }
+        return result;
     }
 
     // TODO: Add any private helper methods.
