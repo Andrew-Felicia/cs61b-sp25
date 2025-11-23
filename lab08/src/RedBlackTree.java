@@ -50,7 +50,9 @@ public class RedBlackTree<T extends Comparable<T>> {
      * @param node
      */
     void flipColors(RBTreeNode<T> node) {
-        // TODO: YOUR CODE HERE
+        node.isBlack = false;
+        node.left.isBlack = true;
+        node.right.isBlack = true;
     }
 
     /**
@@ -59,10 +61,24 @@ public class RedBlackTree<T extends Comparable<T>> {
      * of the new root and the old root!
      * @param node
      * @return
+     *
+     * so confusing!!
+     * the case is, if we want to rotateright node, if node is pointed by other node,
+     * which means node is children, then after we rotate right, we return a new link,
+     * which is x, but it did not change node's parent to point to what x point at
      */
+
     RBTreeNode<T> rotateRight(RBTreeNode<T> node) {
-        // TODO: YOUR CODE HERE
-        return null;
+        RBTreeNode<T> x = node.left;
+        node.left = x.right;
+        x.right = node;
+
+        //color flipping
+        node.isBlack = false;
+        x.isBlack = true;
+
+
+        return x;
     }
 
     /**
@@ -73,8 +89,33 @@ public class RedBlackTree<T extends Comparable<T>> {
      * @return
      */
     RBTreeNode<T> rotateLeft(RBTreeNode<T> node) {
-        // TODO: YOUR CODE HERE
-        return null;
+
+        RBTreeNode<T> x = node.right;
+        node.right = x.left;
+        x.left = node;
+
+        //color flipping
+
+        if(!x.isBlack && !node.isBlack) {
+            return x;
+        }    //this statement is really important, if you don't do the standard TDD process,you will not be
+             //able to think to write this code. because we write a lot of test, and some of the test fails,
+             //so i use the debugger to find the wrong part, it takes me 1 and half hour to find this very
+             //subtle mistake,i did not use any ai to help with this. the mistake is: when the case 1 happens,
+             //if a is also red, then we should keep them red.but if the parent is black, then we do
+             //the standard process.   And case 4 is actually redundant if we write this if statement.
+             //but if we remove this if statement, case 4 also won't work.
+             //      |                          |                |              |
+             //      a(black) --rotateLeft(a)   x(black)         a(red)         x(red)
+             //       \                        /                  \             /
+             //        x(red) standard        a(red)               x(red)      a(red)
+
+
+
+        node.isBlack = false;
+        x.isBlack = true;
+
+        return x;
     }
 
     /**
@@ -106,16 +147,43 @@ public class RedBlackTree<T extends Comparable<T>> {
      */
     private RBTreeNode<T> insertHelper(RBTreeNode<T> node, T item) {
         // TODO: Insert (return) new red leaf node.
+        if(node == null) {
+            return new RBTreeNode<>(false, item);
+        }
+        int tmp = item.compareTo(node.item);
 
-        // TODO: Handle normal binary search tree insertion.
+        if(tmp < 0) {
+            node.left = insertHelper(node.left, item);
+        }
+        if(tmp > 0) {
+            node.right = insertHelper(node.right, item);
+        }
 
-        // TODO: Rotate left operation
+        //case 1
+        if(isRed(node.right) && !isRed((node.left))) {
+            node = rotateLeft(node);
+        }
 
-        // TODO: Rotate right operation
+        //case 2
+        if(isRed(node.left) && isRed(node.right)) {
+            flipColors(node);
+        }
 
-        // TODO: Color flip
+        //case 3
+        if(isRed(node.left) && isRed(node.left.left)) {
+            node = rotateRight(node);
+            flipColors(node);
 
-        return null; //fix this return statement
+        }
+
+        //case 4
+        if(isRed(node.left) && isRed(node.left.right)) {
+            node.left = rotateLeft(node.left);
+            node = rotateRight(node);
+            flipColors(node);
+        }
+
+        return node; //fix this return statement
     }
 
 }
