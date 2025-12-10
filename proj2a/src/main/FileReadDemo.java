@@ -35,5 +35,6 @@ public class FileReadDemo {
             String[] splitLine = nextLine.split(",");
             System.out.println(splitLine[0]);
         }
+        System.out.println(i);
     }
 }
