@@ -107,4 +107,22 @@ public class NGramMapTest {
         assertThat(fishPlusDogWeight.get(1865)).isWithin(1E-10).of(expectedFishPlusDogWeight1865);
     }
 
+
+    @Test
+    public void testOnShortFile1() {
+        // creates an NGramMap from a large dataset
+        //"./data/ngrams/Small_words11.csv"
+        NGramMap ngm = new NGramMap("./data/ngrams/Small_words11.csv",
+                TOTAL_COUNTS_FILE);
+
+        // returns the count of the number of occurrences of economically per year between 2006 and 2008.
+        TimeSeries econCount = ngm.countHistory("action", 1950, 1990);
+        assertThat(econCount.get(1950)).isWithin(1E-10).of(1.0);
+        assertThat(econCount.get(1987)).isWithin(1E-10).of(2.0);
+//        TimeSeries econCount = ngm.countHistory("airport", 2007, 2010);
+//        assertThat(econCount.get(2007)).isWithin(1E-10).of(175702.0);
+//        assertThat(econCount.get(2008)).isWithin(1E-10).of(173294.0);
+
+    }
+
 }  

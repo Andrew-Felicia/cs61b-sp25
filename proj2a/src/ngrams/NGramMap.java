@@ -46,7 +46,8 @@ public class NGramMap {
         TimeSeries tmp = new TimeSeries();
         while(this.inWords.hasNextLine()) {
             String nextLine = this.inWords.readLine();
-            String [] splitLine = nextLine.split("\t");
+            //String [] splitLine = nextLine.split("\t");
+            String [] splitLine = nextLine.split("\\s+");
             if(splitLine[0].equals(word)){
                 tmp.put(Integer.valueOf(splitLine[1]), Double.valueOf(splitLine[2]));
             }
