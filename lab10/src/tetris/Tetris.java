@@ -92,6 +92,31 @@ public class Tetris {
 
         // TODO: Implement interactivity, so the user is able to input the keystrokes to move
         //  the tile and rotate the tile. You'll want to use some provided helper methods here.
+        char c;
+        while(StdDraw.hasNextKeyTyped()) {
+            c = StdDraw.nextKeyTyped();
+            c = Character.toLowerCase(c);
+
+            switch(c) {
+                case 'a':
+                    movement.tryMove(-1, 0);
+                    break;
+                case 's':
+                    movement.tryMove(0, -1);
+                    break;
+                case 'd':
+                    movement.tryMove(1 , 0);
+                    break;
+                case 'q':
+                    movement.rotateLeft();
+                    break;
+                case 'w':
+                    movement.rotateRight();
+                    break;
+                default:
+                    break;
+            }
+        }
 
 
         Tetromino.draw(t, board, t.pos.x, t.pos.y);
@@ -104,6 +129,22 @@ public class Tetris {
      */
     private void incrementScore(int linesCleared) {
         // TODO: Increment the score based on the number of lines cleared.
+        switch (linesCleared) {
+            case 1:
+                this.score += 100;
+                break;
+            case 2:
+                this.score += 300;
+                break;
+            case 3:
+                this.score += 500;
+                break;
+            case 4:
+                this.score += 800;
+                break;
+            default:
+                break;
+        }
 
     }
 
@@ -117,30 +158,113 @@ public class Tetris {
         int linesCleared = 0;
 
         // TODO: Check how many lines have been completed and clear it the rows if completed.
+        for(int row = 0; row < tiles[0].length; row++) {
+            if(isRowFull(row, tiles)){
+                clearRow(row, tiles);
+                linesCleared += 1;
+                shiftDown(row, tiles);
+
+                // re-check same row after shift
+                row -= 1;
+            }
+        }
 
         // TODO: Increment the score based on the number of lines cleared.
+        incrementScore(linesCleared);
 
         fillAux();
     }
+
+    public boolean isRowFull(int row, TETile[][] tiles) {
+        for(int col = 0; col < tiles.length; col++) {
+            if(tiles[col][row] == Tileset.NOTHING) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void clearRow(int row, TETile[][] tiles) {
+        for (int col = 0; col < tiles.length; col++) {
+            tiles[col][row] = Tileset.NOTHING;
+        }
+    }
+
+    private void shiftDown(int clearedRow, TETile[][] tiles) {
+        for (int row = clearedRow; row < tiles[0].length - 1; row++) {
+            for (int col = 0; col < tiles.length; col++) {
+                tiles[col][row] = tiles[col][row + 1];
+            }
+        }
+        // Clear the top row
+        for (int col = 0; col < tiles.length; col++) {
+            tiles[col][tiles[0].length - 1] = Tileset.NOTHING;
+        }
+    }
+
+
+
 
     /**
      * Where the game logic takes place. The game should continue as long as the game isn't
      * over.
      */
+//    public void runGame() {
+//        resetActionTimer();
+//
+//        // TODO: Set up your game loop. The game should keep running until the game is over.
+//        // Use helper methods inside your game loop, according to the spec description.
+//
+//        spawnPiece();
+//        while (!isGameOver()) {
+//            spawnPiece();
+//            updateBoard();
+//            clearLines(board);
+//            renderBoard();
+//            //StdDraw.pause(16);   // ~60 FPS
+//        }
+//
+//    }
+
     public void runGame() {
         resetActionTimer();
+        StdDraw.enableDoubleBuffering();  // make rendering smooth
 
-        // TODO: Set up your game loop. The game should keep running until the game is over.
-        // Use helper methods inside your game loop, according to the spec description.
+        while (!isGameOver()) {
+            // 1. Spawn a new piece if there isn't a current one
+            if (currentTetromino == null) {
+                spawnPiece();
+            }
 
+            // 2. Update the board based on user input & auto-drop
+            updateBoard();
 
+            // 3. If the piece landed this frame (currentTetromino == null now)
+            //    clear lines and prepare for the next piece
+            if (currentTetromino == null) {
+                clearLines(board);
+            }
+
+            // 4. Render everything
+            renderBoard();
+
+            // 5. Small pause to control frame rate
+            StdDraw.pause(16); // ~60 FPS
+        }
+
+        // Game over
+        System.out.println("Game Over! Final Score: " + getScore());
     }
+
 
     /**
      * Renders the score using the StdDraw library.
      */
     private void renderScore() {
         // TODO: Use the StdDraw library to draw out the score.
+        StdDraw.setPenColor(255, 255, 255);
+        StdDraw.setFont();
+        StdDraw.textRight(7,19, String.valueOf(this.score));
 
     }
 
