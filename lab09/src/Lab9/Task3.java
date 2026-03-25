@@ -6,6 +6,7 @@ import tileengine.TETile;
 import tileengine.Tileset;
 import utils.RandomUtils;
 
+import java.awt.*;
 import java.util.Random;
 
 /**
@@ -108,18 +109,23 @@ public class Task3 {
                 switch (c) {
                     case '1':
                         addRandomSquare(world, RANDOM);
+                        tmp += 1;
                         break;
                     case '2':
                         addRandomSquare(world, RANDOM);
+                        tmp += 1;
                         break;
                     case '3':
                         addRandomSquare(world, RANDOM);
+                        tmp += 1;
                         break;
                     case '4':
                         addRandomSquare(world, RANDOM);
+                        tmp += 1;
                         break;
                     case '5':
                         addRandomSquare(world, RANDOM);
+                        tmp += 1;
                         break;
                     case 'q':
                         System.exit(0); // Closes the game window and quits the game.
@@ -127,14 +133,18 @@ public class Task3 {
                     default:
                         break;
                 }
-                tmp += 1;
+                StdDraw.setPenColor(Color.white);
+                StdDraw.textLeft(1, 17, "Number of squares: " + tmp);
+                StdDraw.pause(2);
+                StdDraw.show();
 
 
             }
-            StdDraw.textLeft(1, 17, "Number of squares: " + tmp);
+
 
             // draws the world to the screen
             ter.renderFrame(world);
+            StdDraw.pause(2);
         }
     }
 }

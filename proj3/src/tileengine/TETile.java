@@ -84,6 +84,28 @@ public class TETile {
 
 
     /**
+     * Creates a copy of TETile t, except with given character and textColor.
+     * @param t tile to copy.
+     * @param c character for tile copy.
+     * @param textColor textColor for tile copy.
+     */
+    public TETile(TETile t, char c, Color textColor) {
+        this(c, textColor, t.backgroundColor, t.description, t.id);
+    }
+
+
+    public TETile withBackground(Color newBg) {
+        return new TETile(
+                this.character,
+                this.textColor,
+                newBg,
+                this.description,
+                this.id
+        );
+    }
+
+
+    /**
      * Draws the tile to the screen at location x, y. If a valid filepath is provided,
      * we draw the image located at that filepath to the screen. Otherwise, we fall
      * back to the character and color representation for the tile.
@@ -118,6 +140,12 @@ public class TETile {
     }
 
     /**
+     * textColor of the tile.
+     * @return textColor.
+     */
+    public Color getTextColor() { return textColor;};
+
+    /**
      * Description of the tile. Useful for displaying mouseover text or
      * testing that two tiles represent the same type of thing.
      * @return description of the tile
@@ -132,6 +160,15 @@ public class TETile {
      */
     public int id() {
         return id;
+    }
+
+    /**
+     * get backgroundColor of the tile.
+     * I added this method, which means I'm not satisfied with the design of this class by someone else.
+     * @return backgroundColor of the tile.
+     */
+    public Color GetBackgroundColor() {
+        return backgroundColor;
     }
 
     /**

@@ -5,13 +5,21 @@ import tileengine.TETile;
 import tileengine.Tileset;
 import utils.RandomUtils;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 
 public class World {
 
-    private static final int WIDTH = 80;
-    private static final int HEIGHT = 40;
+    public static final int WIDTH = 80;
+    public static final int HEIGHT = 40;
+    public Map<Room, Boolean> roomsRecorder;// store all the rooms you have created for later use.
+                                    //first:the room object; second: true for room and false for hallway.
+
+    boolean hallway; //this boolean value is dynamic and will change very often, mainly used in
+                     //method MakeRoomOrHallway, and most importantly used as the second parameter for class
+                     //variable roomsRecorder.
     TETile[][] world;
     //Your seeds are:
     //        6828422841946483286
@@ -19,12 +27,19 @@ public class World {
     //        9164226534851273628
     //        4711289055031179240
     //        8018081004497512468
-    long seed = 8018081004497512468L;//add an “L” after the seed so that Java recognizes it as a long number,
-    Random r = new Random(seed);
+    long seed;//add an “L” after the seed so that Java recognizes it as a long number,
+    Random r;
 
-
-    public void MakeNewWorld() {
-
+    /**
+     * Main method:this method will create the pseudorandom world based on seed.
+     * process of make rooms:
+     * using BFS algorithm, and LinkedList to calculate the coordinate of a new room,
+     * and then render it to the world.
+     * @param seed
+     */
+    public void MakeNewWorld(long seed) {
+        this.seed = seed;
+        this.r = new Random(this.seed);
         // Initialization
         TERenderer ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
@@ -35,6 +50,8 @@ public class World {
 
         Room firstRoom = this.MakeFirstRoom();
         firstRoom.MakeRoom(world);
+        roomsRecorder = new HashMap<>();
+        roomsRecorder.put(firstRoom, Boolean.TRUE);
 
         LinkedList<Room> rooms = new LinkedList<>();
         rooms.add(firstRoom);
@@ -124,6 +141,11 @@ public class World {
                 newRoom.MakeRoom(world);
                 this.MakeEntrance(cur, newRoom, i);
                 rooms.add(newRoom);
+                if(!this.hallway) {
+                    roomsRecorder.put(newRoom, Boolean.TRUE);
+                } else {
+                    roomsRecorder.put(newRoom, Boolean.FALSE);
+                }
 
             }//end of for loop.
         }//end of while loop.
@@ -173,7 +195,7 @@ public class World {
     private Room MakeRoomOrHallway(Index bL, Index bR, Index tL, Index tR) {
         int width;
         int height;
-        boolean hallway = RandomUtils.bernoulli(r, 0.5);
+        this.hallway = RandomUtils.bernoulli(r, 0.5);
         if(hallway) {
             boolean vertical = RandomUtils.bernoulli(r, 0.5);
             if(vertical) {
@@ -194,7 +216,7 @@ public class World {
     /**
      * make entrance between current room/hallway and the new-making room/hallway.
      */
-    public void MakeEntrance(Room cur, Room newRoom, int i) {
+    private void MakeEntrance(Room cur, Room newRoom, int i) {
         int x;
         int y;
         if(i == 0 || i == 2) {
@@ -251,5 +273,24 @@ public class World {
 
     }
 
+    /**
+     * return the world for use by other class.
+     * @return TETile[][].
+     */
+    public TETile[][] GetWorld() {
+        return this.world;
+    }
 
+    /**
+     * in order to have the same pseudorandomness, have to use the same Random object.
+     * @return return the Random instance r to be used by other class.
+     */
+    public Random GetRandom() {
+        return this.r;
+    }
+
+
+    public Map<Room, Boolean> GetRoomsRecorder() {
+        return this.roomsRecorder;
+    }
 }
